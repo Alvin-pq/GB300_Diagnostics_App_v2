@@ -1,0 +1,24 @@
+{
+  "name": "gb300-nvl72-diagnostics",
+  "version": "1.0.0",
+  "description": "Pegatron GB300 NVL72 Offline Diagnostics Tool",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder"
+  },
+  "author": "Alvin Wang (Pegatron)",
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "^29.1.0",
+    "electron-builder": "^24.13.3",
+    "electron-packager": "^17.1.2"
+  },
+  "build": {
+    "appId": "com.pegatron.gb300.diagnostics",
+    "productName": "Pegatron Diagnostics",
+    "win": {
+      "target": "portable"
+    }
+  }
+}

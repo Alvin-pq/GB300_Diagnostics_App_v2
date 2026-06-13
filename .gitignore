@@ -1,0 +1,9 @@
+node_modules/
+dist/
+*.log
+701.40C_94lpm_liquid.txt
+debug_margin.js
+debug_excel.js
+walkthrough.md
+task.md
+implementation_plan.md
