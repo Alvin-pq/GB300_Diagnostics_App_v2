@@ -112,6 +112,13 @@
       return obj;
     }
 
+    const DATA_STREAMS = Array.from({length: 40}).map(() => ({
+      left: Math.random() * 100,
+      delay: Math.random() * 5,
+      duration: 1.5 + Math.random() * 3,
+      opacity: 0.3 + Math.random() * 0.7
+    }));
+
     // --- Dynamic Evaluator strictly following user rules ---
     function evaluateMetrics(rows, config) {
       const results = [];
@@ -994,34 +1001,35 @@
       };
 
       const cyberStyles = `
-        @keyframes gridMove {
-          0% { transform: perspective(1000px) rotateX(60deg) translateY(0); }
-          100% { transform: perspective(1000px) rotateX(60deg) translateY(60px); }
+        @keyframes streamFall {
+          0% { transform: translateY(-100vh); opacity: 0; }
+          10% { opacity: var(--max-opacity); }
+          90% { opacity: var(--max-opacity); }
+          100% { transform: translateY(100vh); opacity: 0; }
         }
         .cyber-bg-container {
           position: fixed;
           top: 0; left: 0; right: 0; bottom: 0;
-          background: #020617;
+          background-image: url('./datacenter_bg.png');
+          background-size: cover;
+          background-position: center;
           overflow: hidden;
           z-index: -1;
         }
-        .cyber-grid {
-          position: absolute;
-          width: 200vw;
-          height: 200vh;
-          left: -50vw;
-          top: -50vh;
-          background-image: 
-            linear-gradient(rgba(56, 189, 248, 0.2) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(56, 189, 248, 0.2) 1px, transparent 1px);
-          background-size: 60px 60px;
-          animation: gridMove 3s linear infinite;
-          transform-origin: center top;
-        }
-        .cyber-glow {
+        .cyber-overlay {
           position: absolute;
           inset: 0;
-          background: radial-gradient(circle at 50% 30%, rgba(99, 102, 241, 0.2) 0%, transparent 80%);
+          background: rgba(2, 6, 23, 0.75);
+          backdrop-filter: blur(4px);
+        }
+        .data-stream {
+          position: absolute;
+          top: 0;
+          width: 2px;
+          height: 200px;
+          background: linear-gradient(to bottom, transparent, rgba(56, 189, 248, 0.8), #fff);
+          box-shadow: 0 0 12px rgba(56, 189, 248, 1);
+          animation: streamFall linear infinite;
         }
       `;
 
@@ -1029,8 +1037,15 @@
         <div className="min-h-screen text-slate-200 p-6 font-sans flex flex-col relative z-0">
           <style>{cyberStyles}</style>
           <div className="cyber-bg-container">
-            <div className="cyber-grid"></div>
-            <div className="cyber-glow"></div>
+            <div className="cyber-overlay"></div>
+            {DATA_STREAMS.map((s, i) => (
+              <div key={i} className="data-stream" style={{
+                left: \`\${s.left}%\`,
+                animationDuration: \`\${s.duration}s\`,
+                animationDelay: \`\${s.delay}s\`,
+                '--max-opacity': s.opacity
+              }}></div>
+            ))}
           </div>
           <header className="mb-6 flex items-center justify-between border-b border-slate-800 pb-4">
             <div>
