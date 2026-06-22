@@ -37,6 +37,35 @@
     .custom-scrollbar::-webkit-scrollbar-track { background: #0f172a; border-radius: 4px; }
     .custom-scrollbar::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
     .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #475569; }
+
+    @keyframes streamFall {
+      0% { transform: translateY(-100vh); }
+      100% { transform: translateY(100vh); }
+    }
+    .cyber-bg-container {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-image: url('./datacenter_bg.png');
+      background-size: cover;
+      background-position: center;
+      overflow: hidden;
+      z-index: -1;
+    }
+    .cyber-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(2, 6, 23, 0.75);
+      backdrop-filter: blur(4px);
+    }
+    .data-stream {
+      position: absolute;
+      top: 0;
+      width: 2px;
+      height: 200px;
+      background: linear-gradient(to bottom, transparent, rgba(56, 189, 248, 0.8), #fff);
+      box-shadow: 0 0 12px rgba(56, 189, 248, 1);
+      animation: streamFall linear infinite;
+    }
   </style>
 </head>
 <body>
@@ -1000,40 +1029,8 @@
         );
       };
 
-      const cyberStyles = `
-        @keyframes streamFall {
-          0% { transform: translateY(-100vh); }
-          100% { transform: translateY(100vh); }
-        }
-        .cyber-bg-container {
-          position: fixed;
-          top: 0; left: 0; right: 0; bottom: 0;
-          background-image: url('./datacenter_bg.png');
-          background-size: cover;
-          background-position: center;
-          overflow: hidden;
-          z-index: -1;
-        }
-        .cyber-overlay {
-          position: absolute;
-          inset: 0;
-          background: rgba(2, 6, 23, 0.75);
-          backdrop-filter: blur(4px);
-        }
-        .data-stream {
-          position: absolute;
-          top: 0;
-          width: 2px;
-          height: 200px;
-          background: linear-gradient(to bottom, transparent, rgba(56, 189, 248, 0.8), #fff);
-          box-shadow: 0 0 12px rgba(56, 189, 248, 1);
-          animation: streamFall linear infinite;
-        }
-      `;
-
       return (
         <div className="min-h-screen text-slate-200 p-6 font-sans flex flex-col relative z-0">
-          <style>{cyberStyles}</style>
           <div className="cyber-bg-container">
             <div className="cyber-overlay"></div>
             {DATA_STREAMS.map((s, i) => (
