@@ -1002,10 +1002,8 @@
 
       const cyberStyles = `
         @keyframes streamFall {
-          0% { transform: translateY(-100vh); opacity: 0; }
-          10% { opacity: var(--max-opacity); }
-          90% { opacity: var(--max-opacity); }
-          100% { transform: translateY(100vh); opacity: 0; }
+          0% { transform: translateY(-100vh); }
+          100% { transform: translateY(100vh); }
         }
         .cyber-bg-container {
           position: fixed;
@@ -1043,7 +1041,7 @@
                 left: \`\${s.left}%\`,
                 animationDuration: \`\${s.duration}s\`,
                 animationDelay: \`\${s.delay}s\`,
-                '--max-opacity': s.opacity
+                opacity: s.opacity
               }}></div>
             ))}
           </div>
