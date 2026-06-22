@@ -1,5 +1,8 @@
 node_modules/
 dist/
+dist_electron/
+extract.js
+patch.js
 *.log
 701.40C_94lpm_liquid.txt
 debug_margin.js

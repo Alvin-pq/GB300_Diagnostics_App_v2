@@ -12,7 +12,6 @@
   "author": "Alvin Wang (Pegatron)",
   "license": "ISC",
   "devDependencies": {
-    "@tailwindcss/postcss": "^4.3.1",
     "@vitejs/plugin-react": "^6.0.2",
     "autoprefixer": "^10.5.0",
     "electron": "^29.1.0",
@@ -32,9 +31,12 @@
   "dependencies": {
     "@react-three/drei": "^10.7.7",
     "@react-three/fiber": "^9.6.1",
+    "chart.js": "^4.5.1",
     "lucide-react": "^1.21.0",
+    "papaparse": "^5.5.4",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
-    "three": "^0.184.0"
+    "three": "^0.184.0",
+    "xlsx": "^0.18.5"
   }
 }
