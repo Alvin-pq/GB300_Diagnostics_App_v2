@@ -993,8 +993,45 @@
         );
       };
 
+      const cyberStyles = `
+        @keyframes gridMove {
+          0% { transform: perspective(1000px) rotateX(60deg) translateY(0); }
+          100% { transform: perspective(1000px) rotateX(60deg) translateY(60px); }
+        }
+        .cyber-bg-container {
+          position: fixed;
+          top: 0; left: 0; right: 0; bottom: 0;
+          background: #020617;
+          overflow: hidden;
+          z-index: -1;
+        }
+        .cyber-grid {
+          position: absolute;
+          width: 200vw;
+          height: 200vh;
+          left: -50vw;
+          top: -50vh;
+          background-image: 
+            linear-gradient(rgba(56, 189, 248, 0.2) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(56, 189, 248, 0.2) 1px, transparent 1px);
+          background-size: 60px 60px;
+          animation: gridMove 3s linear infinite;
+          transform-origin: center top;
+        }
+        .cyber-glow {
+          position: absolute;
+          inset: 0;
+          background: radial-gradient(circle at 50% 30%, rgba(99, 102, 241, 0.2) 0%, transparent 80%);
+        }
+      `;
+
       return (
-        <div className="min-h-screen bg-slate-950/80 bg-blend-overlay text-slate-200 p-6 font-sans flex flex-col" style={{ backgroundImage: "url('./datacenter_bg.png')", backgroundSize: "cover", backgroundPosition: "center", backgroundAttachment: "fixed" }}>
+        <div className="min-h-screen text-slate-200 p-6 font-sans flex flex-col relative z-0">
+          <style>{cyberStyles}</style>
+          <div className="cyber-bg-container">
+            <div className="cyber-grid"></div>
+            <div className="cyber-glow"></div>
+          </div>
           <header className="mb-6 flex items-center justify-between border-b border-slate-800 pb-4">
             <div>
               <div className="flex items-center gap-3">
