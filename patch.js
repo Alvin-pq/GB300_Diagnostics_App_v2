@@ -1,0 +1,10 @@
+const fs = require('fs');
+let code = fs.readFileSync('src/App.jsx', 'utf8');
+code = `import Background3D from './Background3D';\n` + code;
+code = code.replace(/<div className="cyber-bg-container">[\s\S]*?<\/div>\s*<header/, '<Background3D />\n          <header');
+code = code.replace(/bg-slate-900 border border-slate-850/g, 'glass-panel');
+code = code.replace(/bg-slate-800\/50 border border-slate-700/g, 'glass-panel');
+code = code.replace(/bg-slate-900\/50/g, 'glass-panel');
+code = code.replace(/className="min-h-screen text-slate-200 p-6 font-sans flex flex-col relative z-0"/g, 'className="min-h-screen text-slate-200 p-6 font-sans flex flex-col relative z-10 custom-scrollbar"');
+fs.writeFileSync('src/App.jsx', code);
+console.log('Replaced successfully');
