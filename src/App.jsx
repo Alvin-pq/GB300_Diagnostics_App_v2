@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo, useRef } from 'react';
 import Papa from 'papaparse';
 import * as XLSX from 'xlsx';
 import { Chart, registerables } from 'chart.js';
+import ExcelJS from 'exceljs';
 import Background3D from './Background3D';
 Chart.register(...registerables);
 
@@ -684,7 +685,7 @@ Chart.register(...registerables);
       const handleExportExcel = async () => {
         const summaryData = [];
 
-        for (let rId = 1; rId <= 8; rId++) {
+        for (let rId = 1; rId <= 16; rId++) {
           const rack = racksData[rId];
           if (!rack || Object.keys(rack).length === 0) continue;
           NVL72_TOPOLOGY.forEach(slot => {
