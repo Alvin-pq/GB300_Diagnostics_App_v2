@@ -95,7 +95,7 @@ Chart.register(...registerables);
           const num = parseFloat(val);
           if (isNaN(num)) return;
 
-          const isMargin = col.endsWith('_1') || /TempLim/i.test(col) || /Margin/i.test(col);
+          const isMargin = col.endsWith('_1') || /TempLim/i.test(col) || /Margin/i.test(col) || /Lim$/i.test(col);
           const isAbsTemp = (/Temp/i.test(col) || col.endsWith('_0')) && !isMargin && !/Leak/i.test(col);
 
           if (isAbsTemp && num < 20) {
@@ -201,7 +201,7 @@ Chart.register(...registerables);
         if (isNaN(num)) return;
         if (/Leak_/i.test(col) && num > 0) isLeaking = true;
         
-        const isMargin = col.endsWith('_1') || /TempLim/i.test(col) || /Margin/i.test(col);
+        const isMargin = col.endsWith('_1') || /TempLim/i.test(col) || /Margin/i.test(col) || /Lim$/i.test(col);
         const isAbsTemp = (/Temp/i.test(col) || col.endsWith('_0')) && !isMargin && !/Leak/i.test(col);
 
         if (isMargin) {
@@ -436,14 +436,19 @@ Chart.register(...registerables);
 
           let fileRows = [];
 
-          if (name.endsWith('.csv') || name.endsWith('.txt')) {
-            if (name.endsWith('.txt')) {
+          if (name.endsWith('.csv') || name.endsWith('.txt') || name.endsWith('.log')) {
+            if (name.endsWith('.txt') || name.endsWith('.log')) {
               let text = await file.text();
-              if (/tray SDR list at /i.test(text)) {
+              // Detect format: "tray SDR list at" OR BMC SDR format "===== [timestamp] IP: x.x.x.x ====="
+              const isTraySDR = /tray SDR list at /i.test(text);
+              const isBmcSDR = /=====\s*\[.*?\]\s*IP:\s*[\d.]+\s*=====/i.test(text);
+
+              if (isTraySDR || isBmcSDR) {
                 const parsedData = {};
                 let currentIp = null;
                 let currentRecord = null;
-                const reIp = /(?:Compute|Switch)?\s*tray SDR list at ([\d\.]+):/i;
+                const reTrayIp = /(?:Compute|Switch)?\s*tray SDR list at ([\d\.]+):/i;
+                const reBmcIp = /=====\s*\[.*?\]\s*IP:\s*([\d.]+)\s*=====/i;
                 const reNumber = /^-?\d+(\.\d+)?/;
                 
                 const lines = text.split('\n');
@@ -453,7 +458,8 @@ Chart.register(...registerables);
                   let line = lines[lineIdx].trim();
                   if (!line) continue;
                   
-                  const matchIp = line.match(reIp);
+                  // Try to match IP header line (both formats)
+                  const matchIp = line.match(reTrayIp) || line.match(reBmcIp);
                   if (matchIp) {
                     if (currentIp && currentRecord) {
                       if (!parsedData[currentIp]) parsedData[currentIp] = [];
@@ -462,10 +468,30 @@ Chart.register(...registerables);
                     currentIp = matchIp[1];
                     currentRecord = { IP: currentIp };
                   } else if (line.includes('|') && currentIp) {
-                    const parts = line.split('|');
-                    if (parts.length >= 2) {
-                      const key = parts[0].trim();
-                      const rawValue = parts[1].trim();
+                    const parts = line.split('|').map(p => p.trim());
+                    
+                    if (isBmcSDR && parts.length >= 5) {
+                      // BMC SDR format: SensorName | HexID | status | entity | value unit
+                      const key = parts[0];
+                      const status = parts[2].toLowerCase();
+                      const rawValue = parts[4];
+                      const lowerVal = rawValue.toLowerCase();
+                      
+                      // Skip disabled, no reading, or non-sensor lines
+                      if (status === 'ns' || ['disabled', 'no reading', 'unspecified', ''].includes(lowerVal)) {
+                        // skip
+                      } else {
+                        const matchNum = rawValue.match(reNumber);
+                        if (matchNum) {
+                          currentRecord[key] = matchNum[0];
+                        } else {
+                          currentRecord[key] = rawValue;
+                        }
+                      }
+                    } else if (parts.length >= 2) {
+                      // Tray SDR format: SensorName | value
+                      const key = parts[0];
+                      const rawValue = parts[1];
                       const lowerVal = rawValue.toLowerCase();
                       if (!['disabled', 'no reading', 'ns', 'unspecified'].includes(lowerVal)) {
                         const matchNum = rawValue.match(reNumber);
@@ -1126,8 +1152,8 @@ Chart.register(...registerables);
                     <svg className="w-4 h-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
                     </svg>
-                    <span className="text-slate-300 text-xs font-semibold">匯入 CSV / XLSX / TXT</span>
-                    <input type="file" accept=".csv, .xlsx, .xls, .txt" multiple className="hidden" onChange={(e) => { handleFiles(e.target.files); e.target.value = null; }} />
+                    <span className="text-slate-300 text-xs font-semibold">匯入 CSV / XLSX / TXT / LOG</span>
+                    <input type="file" accept=".csv, .xlsx, .xls, .txt, .log" multiple className="hidden" onChange={(e) => { handleFiles(e.target.files); e.target.value = null; }} />
                   </label>
                   <button
                     onClick={handleExportExcel}
