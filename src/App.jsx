@@ -1087,22 +1087,12 @@ Chart.register(...registerables);
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-[1fr_auto_1fr] gap-2 items-stretch bg-slate-950 p-2.5 rounded-lg border border-slate-850">
-                    <div className="flex flex-col gap-2">
-                      <div className="text-[9px] text-slate-500 text-center font-mono font-bold pb-1 border-b border-slate-900">A-ROW (L)</div>
-                      {[1, 2, 3, 4, 5, 6, 7, 8].map(rId => renderRackCard(rId))}
+                  <div className="bg-slate-950 p-2.5 rounded-lg border border-slate-850">
+                    <div className="text-[10px] text-slate-500 text-center font-mono font-bold pb-2 mb-2 border-b border-slate-900 tracking-widest">
+                      ROW (16 RACKS)
                     </div>
-                    
-                    <div className="w-8 mx-1 bg-gradient-to-b from-blue-950/50 via-cyan-950/20 to-blue-950/50 border-l border-r border-blue-900/30 flex items-center justify-center relative overflow-hidden rounded">
-                      <div className="absolute inset-0 opacity-10 pointer-events-none bg-[linear-gradient(to_bottom,transparent_0%,rgba(56,189,248,0.3)_50%,transparent_100%)] animate-pulse"></div>
-                      <span style={{ writingMode: 'vertical-rl' }} className="text-[9px] text-blue-400/80 font-mono tracking-[0.3em] font-extrabold uppercase select-none transform rotate-180 origin-center whitespace-nowrap">
-                        Cold Aisle
-                      </span>
-                    </div>
-
-                    <div className="flex flex-col gap-2">
-                      <div className="text-[9px] text-slate-500 text-center font-mono font-bold pb-1 border-b border-slate-900">B-ROW (R)</div>
-                      {[9, 10, 11, 12, 13, 14, 15, 16].map(rId => renderRackCard(rId))}
+                    <div className="grid grid-cols-2 gap-2">
+                      {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16].map(rId => renderRackCard(rId))}
                     </div>
                   </div>
                 </div>
